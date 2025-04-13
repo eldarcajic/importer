@@ -90,6 +90,8 @@ const RootPage = ({ params }: { params: { forTest?: boolean } }) => {
         </div>
       </div>
 
+      <span className="text-red-500 text-5xl ">Hello there</span>
+
       <Button appName="web (with-nestjs)" className={styles.button}>
         Click me!
       </Button>
