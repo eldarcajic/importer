@@ -48,7 +48,7 @@ export const CSVImportClientPage = () => {
     }
 
     setData((prevData) => [...prevData, newData]);
-    setActiveUploadStep((prevStep) => nextActiveStep);
+    setActiveUploadStep(() => nextActiveStep);
     setCompletedUploadSteps((prevSteps) => [...prevSteps, activeUploadStep]);
   };
 
@@ -86,7 +86,7 @@ export const CSVImportClientPage = () => {
   };
 
   return (
-    <div className="flex flex-col items-center justify-start w-full h-full gap-16 py-12">
+    <div className="flex flex-col items-center justify-start w-7xl h-full gap-16 py-12">
       <Stepper
         steps={uploadCSVSteps}
         activeStep={activeUploadStep}
