@@ -1,31 +1,65 @@
-import { Step, Table, TableType } from '@/types';
-import { Button, Card } from '../ui';
+import { useRef } from 'react';
+import { Table, TableType, ImporterDataset } from '@/types';
+import { Card } from '../ui';
 import { CircleX, FileSpreadsheet, Plus } from 'lucide-react';
+import Papa from 'papaparse';
 
 type UploadCsvCardProps = {
   table: Table;
   activeTableType: TableType | null;
   uploaded?: boolean;
   onDeleteFile: (table: Table) => void;
-  openImporter: (table: Table) => void;
+  onUploadFile: (data: any, tableType: string) => void;
 };
 
 export const UploadCsvCard = ({
   table,
   activeTableType,
   uploaded,
-  openImporter,
   onDeleteFile,
+  onUploadFile,
 }: UploadCsvCardProps) => {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const disabled = uploaded || activeTableType !== table.tableType;
+
+  const handleCardClick = () => {
+    if (!disabled && fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      Papa.parse(file, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (result) => {
+          const parsedData = result.data;
+          onUploadFile(parsedData, table.tableType);
+
+          if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+          }
+        },
+        error: (error) => {
+          console.error('CSV parsing error:', error);
+        },
+      });
+    }
+  };
 
   return (
     <Card
-      className={`w-full h-72 flex p-0 flex-col items-center justify-center border-2 transition duration-200 ease-in-out relative ${disabled ? 'border-gray-600' : 'hover:border-gray-400 border-dashed border-gray-300'}`}
+      className={`w-full h-72 flex p-0 flex-col items-center justify-center border-2 transition duration-200 ease-in-out relative ${
+        disabled
+          ? 'border-gray-600'
+          : 'hover:border-gray-400 border-dashed border-gray-300'
+      }`}
     >
       <button
         className="cursor-pointer w-full h-full p-4"
-        onClick={() => openImporter(table)}
+        onClick={handleCardClick}
         disabled={disabled}
       >
         {uploaded ? (
@@ -35,10 +69,17 @@ export const UploadCsvCard = ({
           </div>
         ) : (
           <Plus
-            className={`w-full h-full  ${disabled ? 'text-gray-700' : 'text-gray-500'}`}
+            className={`w-full h-full ${disabled ? 'text-gray-700' : 'text-gray-500'}`}
           />
         )}
       </button>
+      <input
+        type="file"
+        accept=".csv"
+        ref={fileInputRef}
+        onChange={handleFileChange}
+        className="hidden"
+      />
       {uploaded && (
         <button
           onClick={(e) => {
