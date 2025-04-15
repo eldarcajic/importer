@@ -1,13 +1,23 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
-import { Stepper, UploadCsvCard, CsvImportModal } from '@/components/ui';
+import {
+  Stepper,
+  UploadCsvCard,
+  CsvImportModal,
+  Button,
+} from '@/components/ui';
 import { uploadCSVSteps } from '@/constants/upload-csv-steps';
 import { Table, Data, ImporterDataset } from '@/types';
 import { importTables } from '@/constants/import-tables';
+import { useRouter } from 'next/navigation';
+import { useCsvData } from '@/lib/providers/CsvDataContext';
 
 export const CSVImportClientPage = () => {
+  const { csvData, setCSVData } = useCsvData();
+  const router = useRouter();
+
   const [activeUploadStep, setActiveUploadStep] = useState(
     uploadCSVSteps[0]?.step || 1,
   );
@@ -47,7 +57,7 @@ export const CSVImportClientPage = () => {
     }
 
     setData((prevData) => [...prevData, newData]);
-    setActiveUploadStep((prevStep) => nextActiveStep);
+    setActiveUploadStep(() => nextActiveStep);
     setCompletedUploadSteps((prevSteps) => [...prevSteps, activeUploadStep]);
   };
 
@@ -70,9 +80,15 @@ export const CSVImportClientPage = () => {
       prevSteps.filter((step) => step !== removedStep?.step),
     );
   };
+  console.log(csvData);
+
+  const handleContinue = () => {
+    setCSVData(data);
+    router.push('/csv-import/review');
+  };
 
   return (
-    <div className="flex flex-col items-center justify-start w-full h-full gap-16 py-12">
+    <div className="flex flex-col items-center justify-start w-7xl h-full gap-16 py-12">
       <Stepper
         steps={uploadCSVSteps}
         activeStep={activeUploadStep}
@@ -106,6 +122,14 @@ export const CSVImportClientPage = () => {
         }
         onUploadFile={handleUploadFile}
       />
+
+      <Button
+        className="self-end  text-lg"
+        disabled={completedUploadSteps.length !== 5}
+        onClick={handleContinue}
+      >
+        Continue
+      </Button>
     </div>
   );
 };
