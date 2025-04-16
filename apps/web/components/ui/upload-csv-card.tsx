@@ -1,3 +1,5 @@
+'use client';
+
 import { useRef } from 'react';
 import { Table, TableType, ImporterDataset } from '@/types';
 import { Card } from '../ui';
