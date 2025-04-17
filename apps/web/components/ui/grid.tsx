@@ -1,13 +1,13 @@
-import { tempDataType } from '@/app/csv-import/review/page-client-component';
-import { darkTheme } from '@/constants/table-theme';
+import { tempDataType } from "@/app/csv-import/review/page-client-component";
+import { darkTheme } from "@/constants/table-theme";
 import {
   AllCommunityModule,
   ColDef,
   ColGroupDef,
   ModuleRegistry,
-} from 'ag-grid-community';
-import { AgGridReact } from 'ag-grid-react';
-import { useMemo, useState } from 'react';
+} from "ag-grid-community";
+import { AgGridReact } from "ag-grid-react";
+import { useMemo, useState } from "react";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 type GridProps = {
@@ -22,12 +22,12 @@ export const Grid = ({ data }: GridProps) => {
     return data.data[0] ? Object.keys(data.data[0]) : [];
   }, []);
 
-  const colDefs = [...columns, 'comment'].map((col) => {
-    return { field: col };
+  const colDefs = [...columns, "comment"].map((col) => {
+    return { field: col, flex: 1, minWidth: 250 };
   });
 
   return (
-    <div style={{ height: 500 }}>
+    <div className="h-full w-full">
       <AgGridReact
         columnDefs={colDefs}
         defaultColDef={defaultColDef}

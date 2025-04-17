@@ -1,13 +1,15 @@
-import { themeQuartz } from 'ag-grid-community';
+import { themeQuartz } from "ag-grid-community";
 
 export const darkTheme = themeQuartz.withParams({
-  backgroundColor: '#1f2836',
-  browserColorScheme: 'dark',
+  backgroundColor: "#151515",
+  browserColorScheme: "dark",
   chromeBackgroundColor: {
-    ref: 'foregroundColor',
+    ref: "foregroundColor",
     mix: 0.07,
-    onto: 'backgroundColor',
+    onto: "backgroundColor",
   },
-  foregroundColor: '#FFF',
+  foregroundColor: "#FFF",
+  headerBackgroundColor: "#151515",
   headerFontSize: 14,
+  oddRowBackgroundColor: "#78716c33",
 });

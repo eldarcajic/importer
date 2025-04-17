@@ -1,7 +1,7 @@
-import { Check } from 'lucide-react';
-import React from 'react';
-import clsx from 'clsx';
-import { Step } from '@/types';
+import { Check } from "lucide-react";
+import React from "react";
+import clsx from "clsx";
+import { Step } from "@/types";
 
 type StepperProps = {
   activeStep: number;
@@ -14,7 +14,7 @@ export const Stepper = ({
   steps,
 }: StepperProps) => {
   return (
-    <div className="mb-10 flex items-center justify-between w-7xl">
+    <div className="mb-10 flex w-7xl items-center justify-between">
       {steps.map((item, index) => {
         const { step, label } = item;
 
@@ -22,16 +22,16 @@ export const Stepper = ({
         const isActive = step === activeStep;
 
         const wrapperClass = clsx(
-          'z-10 flex items-center gap-4 px-4 bg-background ',
-          isCompleted ? 'text-violet-500' : 'text-white',
+          "z-10 flex items-center gap-4 px-4 bg-background ",
+          isCompleted ? "text-green-600" : "text-white",
         );
 
         const circleClass = clsx(
-          'flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold ',
+          "flex h-8 w-8 items-center justify-center rounded-full border-2 text-sm font-semibold ",
           {
-            'border-violet-500 text-violet-500': isCompleted,
-            'bg-violet-500 text-white border-violet-500': isActive,
-            'border-white text-white': !isCompleted && !isActive,
+            "border-green-600 text-green-600": isCompleted,
+            "bg-green-600 text-white border-green-600": isActive,
+            "border-border text-muted-foreground": !isCompleted && !isActive,
           },
         );
         return (
@@ -47,16 +47,16 @@ export const Stepper = ({
             </div>
 
             {index < steps.length - 1 && (
-              <div className="absolute left-1/2 h-px w-full bg-gray-300">
+              <div className="bg-border absolute left-1/2 h-px w-full">
                 <div
                   className={clsx(
-                    'h-full bg-violet-500',
-                    isCompleted ? 'w-full' : 'w-0',
+                    "h-full bg-green-600",
+                    isCompleted ? "w-full" : "w-0",
                   )}
                   style={{
                     animation: isCompleted
-                      ? 'progressFill 1.2s forwards'
-                      : 'none',
+                      ? "progressFill 1.2s forwards"
+                      : "none",
                   }}
                 />
               </div>

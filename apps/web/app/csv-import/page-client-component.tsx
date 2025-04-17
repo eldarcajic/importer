@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo, useState } from 'react';
-import { ChevronRight, Download } from 'lucide-react';
-import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
+import JSZip from "jszip";
+import { ChevronRight, Download } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
-import { Stepper, UploadCsvCard, Button } from '@/components/ui';
-import { uploadCSVSteps } from '@/constants/upload-csv-steps';
-import { Table, Data, ImporterDataset } from '@/types';
-import { importTables } from '@/constants/import-tables';
-import { csvTemplates } from '@/constants/csv-templates';
+import { Button, Stepper, UploadCsvCard } from "@/components/ui";
+import { csvTemplates } from "@/constants/csv-templates";
+import { importTables } from "@/constants/import-tables";
+import { uploadCSVSteps } from "@/constants/upload-csv-steps";
+import { Data, Table } from "@/types";
 
 export const CSVImportClientPage = () => {
   const [data, setData] = useState<Data[]>([]);
@@ -37,7 +37,7 @@ export const CSVImportClientPage = () => {
 
   const handleUploadFile = (dataSet: any) => {
     const newData = {
-      tableName: activeTableType || '',
+      tableName: activeTableType || "",
       data: dataSet,
     };
 
@@ -81,39 +81,40 @@ export const CSVImportClientPage = () => {
       zip.file(`${table.tableType}-Table.csv`, csvContent);
     });
 
-    const content = await zip.generateAsync({ type: 'blob' });
-    saveAs(content, 'csv-templates.zip');
+    const content = await zip.generateAsync({ type: "blob" });
+    saveAs(content, "csv-templates.zip");
   };
 
   return (
-    <div className="flex flex-col items-center justify-start w-7xl h-full gap-16 py-12">
+    <div className="flex h-full w-7xl flex-col items-center justify-start gap-16 py-12">
       <Stepper
         steps={uploadCSVSteps}
         activeStep={activeUploadStep}
         completedSteps={completedUploadSteps}
       />
 
-      <div className="flex flex-col items-center justify-start w-full h-full gap-8">
-        <div className="w-full max-w-7xl flex justify-between items-center">
+      <div className="flex h-full w-full flex-col items-center justify-start gap-8">
+        <div className="flex w-full max-w-7xl items-center justify-between">
           <div>
             {!areFilesUploaded ? (
               <>
-                <span className="text-2xl text-gray-500">
+                <span className="text-muted-foreground text-2xl">
                   Please upload the following CSV file: {` `}
                 </span>
-                <span className="text-2xl text-primary font-semibold ">
+                <span className="text-primary text-2xl font-semibold">
                   {activeTableType}-Table.csv
                 </span>
               </>
             ) : (
               <>
-                <span className="text-2xl text-gray-500">
-                  All files are uploaded. Please{' '}
+                <span className="text-muted-foreground text-2xl">
+                  All files are uploaded. Please
                 </span>
-                <span className="text-2xl text-primary font-semibold">
-                  Proceed{' '}
+                <span className="text-primary text-2xl font-semibold">
+                  {" "}
+                  Proceed{" "}
                 </span>
-                <span className="text-2xl text-gray-500">
+                <span className="text-muted-foreground text-2xl">
                   to validate them.
                 </span>
               </>
@@ -125,7 +126,7 @@ export const CSVImportClientPage = () => {
           </Button>
         </div>
       </div>
-      <div className="flex flex-row items-center justify-start w-full max-w-7xl h-full gap-8 mt-12">
+      <div className="mt-12 flex h-full w-full max-w-7xl flex-row items-center justify-start gap-8">
         {importTables.map((table) => (
           <UploadCsvCard
             key={table.id}
@@ -137,12 +138,11 @@ export const CSVImportClientPage = () => {
           />
         ))}
       </div>
-      <div className="flex flex-row items-center justify-end w-full max-w-7xl h-full gap-8 mt-12">
-        <Button disabled={!areFilesUploaded}>
-          <span>Proceed</span>
-          <ChevronRight />
-        </Button>
-      </div>
+
+      <Button className="self-end" disabled={!areFilesUploaded}>
+        <span>Proceed</span>
+        <ChevronRight />
+      </Button>
     </div>
   );
 };
