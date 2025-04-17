@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useRef } from 'react';
-import { Table, TableType, ImporterDataset } from '@/types';
-import { Card } from '../ui';
-import { CircleX, FileSpreadsheet, Plus } from 'lucide-react';
-import Papa from 'papaparse';
+import { useRef } from "react";
+import { Table, TableType, ImporterDataset } from "@/types";
+import { Card } from "../ui";
+import { CircleX, FileSpreadsheet, Plus } from "lucide-react";
+import Papa from "papaparse";
 
 type UploadCsvCardProps = {
   table: Table;
@@ -41,11 +41,11 @@ export const UploadCsvCard = ({
           onUploadFile(parsedData, table.tableType);
 
           if (fileInputRef.current) {
-            fileInputRef.current.value = '';
+            fileInputRef.current.value = "";
           }
         },
         error: (error) => {
-          console.error('CSV parsing error:', error);
+          console.error("CSV parsing error:", error);
         },
       });
     }
@@ -53,25 +53,25 @@ export const UploadCsvCard = ({
 
   return (
     <Card
-      className={`w-full h-72 flex p-0 flex-col items-center justify-center border-2 transition duration-200 ease-in-out relative ${
+      className={`relative flex h-72 w-full flex-col items-center justify-center border-2 p-0 transition duration-200 ease-in-out ${
         disabled
-          ? 'border-gray-600'
-          : 'hover:border-gray-400 border-dashed border-gray-300'
+          ? "border-muted"
+          : "hover:border-border border-muted-foreground border-dashed"
       }`}
     >
       <button
-        className="cursor-pointer w-full h-full p-4"
+        className="h-full w-full cursor-pointer p-4"
         onClick={handleCardClick}
         disabled={disabled}
       >
         {uploaded ? (
-          <div className="flex flex-col items-center justify-center w-full h-full gap-6">
+          <div className="flex h-full w-full flex-col items-center justify-center gap-6">
             <div className="text-xl text-gray-400">{table.label}</div>
-            <FileSpreadsheet className="w-full h-full text-green-700" />
+            <FileSpreadsheet className="h-full w-full text-green-700" />
           </div>
         ) : (
           <Plus
-            className={`w-full h-full ${disabled ? 'text-gray-700' : 'text-gray-500'}`}
+            className={`h-full w-full ${disabled ? "text-muted" : "text-muted-foreground"}`}
           />
         )}
       </button>
@@ -89,7 +89,7 @@ export const UploadCsvCard = ({
             onDeleteFile(table);
           }}
         >
-          <CircleX className="absolute top-2 right-2 w-8 h-8 text-red-500 cursor-pointer" />
+          <CircleX className="absolute top-2 right-2 h-8 w-8 cursor-pointer text-red-500" />
         </button>
       )}
     </Card>
