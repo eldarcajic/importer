@@ -1,6 +1,6 @@
 "use client";
 
-import { Data } from "@/types";
+import { Data, Row } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { createContext, ReactNode, useContext, useState } from "react";
 import { validateData } from "../queries/api";
@@ -30,7 +30,16 @@ export const CsvDataProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const onDataChange = (data: Data[]) => {
-    mutate(data);
+    const filteredData: Data[] = [];
+    for (const table of data) {
+      const filteredTable = table.data.map((x) => ({
+        ...x,
+        error: "",
+      }));
+
+      filteredData.push({ tableName: table.tableName, data: filteredTable });
+    }
+    mutate(filteredData);
   };
 
   const clearData = () => setCSVData([]);
