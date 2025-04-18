@@ -3,7 +3,7 @@
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import { ChevronRight, Download } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { Button, Stepper, UploadCsvCard } from "@/components/ui";
 import { csvTemplates } from "@/constants/csv-templates";

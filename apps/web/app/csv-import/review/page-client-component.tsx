@@ -5,14 +5,12 @@ import { Grid } from "@/components/ui/grid";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCsvData } from "@/lib/providers/CsvDataContext";
-import { validateData } from "@/lib/queries/api";
-import { useMutation } from "@tanstack/react-query";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export const Review = () => {
-  const { csvData, onDataChange, isDataLoading } = useCsvData();
+  const { csvData, isDataLoading } = useCsvData();
   const [progress, setProgress] = useState(13);
   const router = useRouter();
 

@@ -1,18 +1,11 @@
 "use client";
 
-import { useRef } from "react";
-import { Table, TableType, ImporterDataset } from "@/types";
-import { Card } from "../ui";
+import { Row, UploadCsvCardProps } from "@/types";
 import { CircleX, FileSpreadsheet, Plus } from "lucide-react";
 import Papa from "papaparse";
-
-type UploadCsvCardProps = {
-  table: Table;
-  activeTableType: TableType | null;
-  uploaded?: boolean;
-  onDeleteFile: (table: Table) => void;
-  onUploadFile: (data: any, tableType: string) => void;
-};
+import { useRef } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { Card } from "../ui";
 
 export const UploadCsvCard = ({
   table,
@@ -36,10 +29,13 @@ export const UploadCsvCard = ({
       Papa.parse(file, {
         header: true,
         skipEmptyLines: true,
-        complete: (result) => {
-          const parsedData = result.data;
-          onUploadFile(parsedData, table.tableType);
+        complete: (result: { data: Row[] }) => {
+          const parsedData = result.data.map((row) => ({
+            id: uuidv4(),
+            ...row,
+          }));
 
+          onUploadFile(parsedData, table.tableType);
           if (fileInputRef.current) {
             fileInputRef.current.value = "";
           }

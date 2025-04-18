@@ -5,11 +5,12 @@ export type TableType =
   | "Organization"
   | "Stage";
 
-export type CsvModalProps = {
-  isOpen: boolean;
-  onClose: () => void;
-  onUploadFile: (dataSet: ImporterDataset) => void;
-  table: Table | null;
+export type UploadCsvCardProps = {
+  table: Table;
+  activeTableType: TableType | null;
+  uploaded?: boolean;
+  onDeleteFile: (table: Table) => void;
+  onUploadFile: (data: any, tableType: string) => void;
 };
 
 export type Table = {
@@ -23,7 +24,7 @@ export type Table = {
 
 export type Data = {
   tableName: string;
-  data: ImporterDataset;
+  data: Row[];
 };
 
-export type ImporterDataset = Record<string, string | undefined>[];
+export type Row = Record<string, string | number | Date | undefined>;
