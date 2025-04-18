@@ -1,8 +1,9 @@
-import { PropsWithChildren } from "react";
-import type { Metadata } from "next";
+import { PropsWithChildren } from 'react';
+import type { Metadata } from 'next';
 
-import { CsvDataProvider } from "@/lib/providers/CsvDataContext";
-import "./globals.css";
+import { Providers } from '@/lib/providers/Providers';
+import './globals.css';
+
 
 export const metadata: Metadata = {
   title: "Create Turborepo",
@@ -11,10 +12,10 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<PropsWithChildren>) {
   return (
-    <html lang="en" className="dark">
-      <body>
-        <CsvDataProvider>{children}</CsvDataProvider>
-      </body>
-    </html>
+    <Providers>
+      <html lang="en" className="dark">
+        <body>{children}</body>
+      </html>
+    </Providers>
   );
 }

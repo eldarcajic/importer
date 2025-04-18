@@ -1,11 +1,14 @@
-'use client';
+"use client";
 
-import { Data } from '@/types';
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { Data } from "@/types";
+import { useMutation } from "@tanstack/react-query";
+import { createContext, ReactNode, useContext, useState } from "react";
+import { validateData } from "../queries/api";
 
 type CsvDataContextType = {
   csvData: Data[];
-  setCSVData: React.Dispatch<React.SetStateAction<Data[]>>;
+  isDataLoading: boolean;
+  onDataChange: (data: Data[]) => void;
   clearData: () => void;
 };
 
@@ -14,10 +17,28 @@ const CsvDataContext = createContext<CsvDataContextType | undefined>(undefined);
 export const CsvDataProvider = ({ children }: { children: ReactNode }) => {
   const [csvData, setCSVData] = useState<Data[]>([]);
 
+  const { mutate, isPending, isError, error, data } = useMutation({
+    mutationFn: validateData,
+    onError: (err) => {
+      console.error("Validation error:", err);
+    },
+    onSuccess: (data) => {
+      console.log(data);
+      console.log(data.tables);
+      setCSVData(data.tables);
+    },
+  });
+
+  const onDataChange = (data: Data[]) => {
+    mutate(data);
+  };
+
   const clearData = () => setCSVData([]);
 
   return (
-    <CsvDataContext.Provider value={{ csvData, setCSVData, clearData }}>
+    <CsvDataContext.Provider
+      value={{ csvData, onDataChange, clearData, isDataLoading: isPending }}
+    >
       {children}
     </CsvDataContext.Provider>
   );
@@ -26,7 +47,10 @@ export const CsvDataProvider = ({ children }: { children: ReactNode }) => {
 export const useCsvData = () => {
   const context = useContext(CsvDataContext);
   if (!context) {
-    throw new Error('useCsvData must be used within a CsvDataProvider');
+    throw new Error("useCsvData must be used within a CsvDataProvider");
   }
   return context;
 };
+function setTableData(tables: any) {
+  throw new Error("Function not implemented.");
+}
