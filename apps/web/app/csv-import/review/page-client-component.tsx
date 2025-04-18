@@ -2,16 +2,67 @@
 
 import { Button } from "@/components/ui/button";
 import { Grid } from "@/components/ui/grid";
+import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { csvData } from "@/constants/csv-data";
-import { ChevronRight } from "lucide-react";
-
-export type tempDataType = {
-  tableName: string;
-  data: Record<string, string | undefined>[];
-};
+import { useCsvData } from "@/lib/providers/CsvDataContext";
+import { validateData } from "@/lib/queries/api";
+import { useMutation } from "@tanstack/react-query";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export const Review = () => {
+  const { csvData, onDataChange, isDataLoading } = useCsvData();
+  const [progress, setProgress] = useState(13);
+  const router = useRouter();
+
+  const goBack = () => {
+    router.push("/csv-import");
+  };
+
+  useEffect(() => {
+    const timer = setInterval(
+      () => setProgress((prev) => (prev + 30 <= 95 ? prev + 30 : 95)),
+      300,
+    );
+
+    if (!isDataLoading && csvData.length) {
+      setProgress(100);
+      clearInterval(timer);
+    }
+
+    return () => clearInterval(timer);
+  }, [csvData]);
+
+  if (!csvData.length) {
+    return (
+      <div className="box-border flex h-screen w-full flex-col items-center justify-between gap-8 px-20 py-12">
+        <h1 className="text-primary text-4xl">Data review</h1>
+        <div className="flex flex-col items-center justify-center gap-8">
+          {!isDataLoading ? (
+            <>
+              <p className="text-muted-foreground text-lg">
+                No data found. Please go back and upload necessary files.
+              </p>
+              <Button onClick={goBack}>
+                <ChevronLeft />
+                Go Back
+              </Button>
+            </>
+          ) : (
+            <div className="flex h-full w-full flex-col gap-6">
+              <p className="text-muted-foreground text-lg">
+                We are preparing the data for you. Please wait.
+              </p>
+              <Progress value={progress} className="h-3 w-full" />
+            </div>
+          )}
+        </div>
+        <div></div>
+      </div>
+    );
+  }
+
   return (
     <div className="box-border flex h-screen w-full flex-col items-center justify-start gap-8 px-20 py-12">
       <h1 className="text-primary text-4xl">Data review</h1>

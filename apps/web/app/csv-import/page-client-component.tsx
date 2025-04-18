@@ -10,6 +10,8 @@ import { csvTemplates } from "@/constants/csv-templates";
 import { importTables } from "@/constants/import-tables";
 import { uploadCSVSteps } from "@/constants/upload-csv-steps";
 import { Data, Table } from "@/types";
+import { useCsvData } from "@/lib/providers/CsvDataContext";
+import { useRouter } from "next/navigation";
 
 export const CSVImportClientPage = () => {
   const [data, setData] = useState<Data[]>([]);
@@ -19,6 +21,8 @@ export const CSVImportClientPage = () => {
   const [completedUploadSteps, setCompletedUploadSteps] = useState<number[]>(
     [],
   );
+  const { onDataChange } = useCsvData();
+  const router = useRouter();
 
   const activeTableType = useMemo(() => {
     const step = uploadCSVSteps.find((step) => step.step === activeUploadStep);
@@ -31,9 +35,10 @@ export const CSVImportClientPage = () => {
     [uploadCSVSteps, completedUploadSteps],
   );
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  const handleProceed = () => {
+    onDataChange(data);
+    router.push("/csv-import/review");
+  };
 
   const handleUploadFile = (dataSet: any) => {
     const newData = {
@@ -139,7 +144,11 @@ export const CSVImportClientPage = () => {
         ))}
       </div>
 
-      <Button className="self-end" disabled={!areFilesUploaded}>
+      <Button
+        className="self-end"
+        disabled={!areFilesUploaded}
+        onClick={handleProceed}
+      >
         <span>Proceed</span>
         <ChevronRight />
       </Button>

@@ -1,9 +1,9 @@
 export type TableType =
-  | 'Attribute'
-  | 'Contact'
-  | 'Deal'
-  | 'Organization'
-  | 'Stage';
+  | "Attribute"
+  | "Contact"
+  | "Deal"
+  | "Organization"
+  | "Stage";
 
 export type CsvModalProps = {
   isOpen: boolean;
@@ -26,16 +26,4 @@ export type Data = {
   data: ImporterDataset;
 };
 
-export type ImporterDataset = {
-  num_rows: number;
-  num_columns: number;
-  error: null | string;
-  columns: {
-    key: string;
-    name: string;
-  }[];
-  rows: {
-    index: number;
-    values: any[];
-  }[];
-};
+export type ImporterDataset = Record<string, string | undefined>[];
