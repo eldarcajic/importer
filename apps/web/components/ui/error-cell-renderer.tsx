@@ -1,16 +1,16 @@
 import React, { useMemo } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui";
 import { Button } from "@/components/ui/button";
-import { Check, CheckCheck, CheckIcon, Eye } from "lucide-react";
+import { CheckIcon, Eye } from "lucide-react";
+import { Row } from "@/types";
+import { ICellRenderer, ICellRendererParams } from "ag-grid-community";
 
 // Custom cell renderer for the "error" column
 interface ErrorCellRendererProps {
-  data: {
-    error?: string | Record<string, unknown>;
-  };
+  data: Row;
 }
 
-export const ErrorCellRenderer = ({ data }: ErrorCellRendererProps) => {
+export const ErrorCellRenderer = ({ data }: ICellRendererParams) => {
   const error = data?.error;
 
   if (!error) {
@@ -26,7 +26,7 @@ export const ErrorCellRenderer = ({ data }: ErrorCellRendererProps) => {
     <div className="flex h-full w-full items-center justify-center">
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="default" size="sm" className="bg-red-500 text-white">
+          <Button variant="default" size="sm" className="bg-red-700 text-white">
             <Eye />
             View Errors
           </Button>

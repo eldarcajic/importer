@@ -1,8 +1,8 @@
-import { Review } from './page-client-component';
+import { Review } from "./page-client-component";
 
 const ReviewPage = () => {
   return (
-    <div className="flex flex-col items-center justify-start w-full h-full">
+    <div className="flex h-full w-full flex-col items-center justify-start">
       <Review />
     </div>
   );

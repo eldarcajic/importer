@@ -9,6 +9,8 @@ import { useMemo, useRef } from "react";
 import { ErrorCellRenderer } from "./error-cell-renderer";
 import { Data, Row } from "@/types";
 import { useCsvData } from "@/lib/providers/CsvDataContext";
+import { CellRenderer } from "./cell-renderer";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 type GridProps = {
@@ -55,7 +57,7 @@ export const Grid = ({ data }: GridProps) => {
           minWidth: 250,
           pinned: isErrorCol,
           editable: isErrorCol ? false : true,
-          cellRenderer: isErrorCol ? ErrorCellRenderer : undefined,
+          cellRenderer: isErrorCol ? ErrorCellRenderer : CellRenderer,
         };
       });
     }, [columns, hasErrors]);
@@ -85,14 +87,16 @@ export const Grid = ({ data }: GridProps) => {
 
   return (
     <div className="ag-theme-alpine h-full w-full">
-      <AgGridReact
-        columnDefs={GridColumnDefs({ columns, hasErrors })}
-        defaultColDef={defaultColDef}
-        ref={gridRef}
-        rowData={data.data}
-        theme={darkTheme}
-        onCellValueChanged={onCellValueChanged}
-      />
+      <TooltipProvider>
+        <AgGridReact
+          columnDefs={GridColumnDefs({ columns, hasErrors })}
+          defaultColDef={defaultColDef}
+          ref={gridRef}
+          rowData={data.data}
+          theme={darkTheme}
+          onCellValueChanged={onCellValueChanged}
+        />
+      </TooltipProvider>
     </div>
   );
 };

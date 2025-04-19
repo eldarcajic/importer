@@ -17,7 +17,7 @@ const CsvDataContext = createContext<CsvDataContextType | undefined>(undefined);
 export const CsvDataProvider = ({ children }: { children: ReactNode }) => {
   const [csvData, setCSVData] = useState<Data[]>([]);
 
-  const { mutate, isPending, isError, error, data } = useMutation({
+  const { mutate, isPending } = useMutation({
     mutationFn: validateData,
     onError: (err) => {
       console.error("Validation error:", err);
