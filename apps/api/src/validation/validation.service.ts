@@ -18,7 +18,7 @@ export class ValidationService {
       email: /^[^@]+@[^@]+\.[^@]+$/,
       phone: /^\d[\d-]{5,}$/,
       date: /^\d{4}-\d{2}-\d{2}$/,
-    },
+    }, // Maybe use standard library for validation, e.g. phone - https://www.npmjs.com/package/phone
     attributePrefixes: {
       Contact: 'contact_attribute_',
       Deal: 'deal_attribute_',
