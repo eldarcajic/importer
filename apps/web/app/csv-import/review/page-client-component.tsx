@@ -5,7 +5,12 @@ import { Grid } from "@/components/ui/grid";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCsvData } from "@/lib/providers/CsvDataContext";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  FileWarning,
+  TriangleAlert,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -70,11 +75,22 @@ export const Review = () => {
       </p>
       <Tabs defaultValue={csvData[0]?.tableName} className="h-full w-full">
         <TabsList className="h-12 w-full rounded-xl px-3 py-1.5">
-          {csvData.map((table) => (
-            <TabsTrigger key={table.tableName} value={table.tableName}>
-              {table.tableName}
-            </TabsTrigger>
-          ))}
+          {csvData.map((table) => {
+            const hasErrors = table.data.some((row) => row.error);
+
+            return (
+              <TabsTrigger
+                className="flex flex-row gap-3"
+                key={table.tableName}
+                value={table.tableName}
+              >
+                <span>{table.tableName}</span>
+                {hasErrors && (
+                  <TriangleAlert className="h-6 w-6 text-orange-700" />
+                )}
+              </TabsTrigger>
+            );
+          })}
         </TabsList>
 
         {csvData.map((table) => (

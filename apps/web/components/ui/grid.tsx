@@ -3,9 +3,10 @@ import {
   AllCommunityModule,
   CellValueChangedEvent,
   ModuleRegistry,
+  GridOptions,
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useCallback } from "react";
 import { ErrorCellRenderer } from "./error-cell-renderer";
 import { Data, Row } from "@/types";
 import { useCsvData } from "@/lib/providers/CsvDataContext";
@@ -13,6 +14,7 @@ import { CellRenderer } from "./cell-renderer";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
+
 type GridProps = {
   data: Data;
 };
@@ -85,8 +87,55 @@ export const Grid = ({ data }: GridProps) => {
     onDataChange(updatedTables);
   };
 
+  // Function to add a new row
+  const addNewRow = useCallback(() => {
+    const newRow: Row = {
+      id: crypto.randomUUID(), // Generate unique ID for the new row
+      // Initialize other fields with empty or default values
+      ...columns.reduce(
+        (acc, col) => {
+          if (col !== "id" && col !== "error") {
+            acc[col] = "";
+          }
+          return acc;
+        },
+        {} as Record<string, string>,
+      ),
+      error: "",
+    };
+
+    const updatedTables: Data[] = csvData.map((table) => {
+      if (table.tableName !== data.tableName) return table;
+
+      return {
+        ...table,
+        data: [...table.data, newRow],
+      };
+    });
+
+    onDataChange(updatedTables);
+  }, [csvData, columns, data.tableName, onDataChange]);
+
+  // Custom full-width cell renderer for the "Add Row" button
+  const fullWidthCellRenderer = useCallback(() => {
+    return (
+      <div className="p-2.5 text-center">
+        <button onClick={addNewRow}>Add New Row</button>
+      </div>
+    );
+  }, [addNewRow]);
+
+  // Grid options to include pinned bottom row
+  const gridOptions: GridOptions = {
+    pinnedBottomRowData: [{ fullWidth: true }], // Single full-width row
+    isFullWidthRow: (params) => {
+      return params.rowNode.data.fullWidth === true;
+    },
+    fullWidthCellRenderer,
+  };
+
   return (
-    <div className="ag-theme-alpine h-full w-full">
+    <div className="h-full w-full">
       <TooltipProvider>
         <AgGridReact
           columnDefs={GridColumnDefs({ columns, hasErrors })}
@@ -95,11 +144,13 @@ export const Grid = ({ data }: GridProps) => {
           rowData={data.data}
           theme={darkTheme}
           onCellValueChanged={onCellValueChanged}
+          gridOptions={gridOptions}
         />
       </TooltipProvider>
     </div>
   );
 };
+
 function generateHeaderName(col: string, csvData: Data[]) {
   if (col.includes("attribute") && col !== "attribute_type") {
     const attributeTable = csvData.find(
