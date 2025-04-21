@@ -36,8 +36,8 @@ export class UsersService {
       },
       {
         id: '4',
-        name: 'Emma Carter',
-        email: 'emma.carter@example.com',
+        name: 'Anna Cramling',
+        email: 'anna.cramling@example.com',
         password: 'password',
         createdAt: new Date('2023-01-05'),
         updatedAt: new Date('2023-01-06'),

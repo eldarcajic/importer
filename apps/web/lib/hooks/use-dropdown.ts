@@ -63,8 +63,6 @@ export const useDropdown = (
     },
   ];
 
-  console.log({ DROPDOWN_COLS, boards, users });
-
   return { DROPDOWN_COLS: DROPDOWN_COLS as DropdownCols };
 };
 

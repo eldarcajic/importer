@@ -1,19 +1,17 @@
-import React, { useMemo } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui";
 import { Button } from "@/components/ui/button";
+import { ICellRendererParams } from "ag-grid-community";
 import { CheckIcon, Eye } from "lucide-react";
-import { Row } from "@/types";
-import { ICellRenderer, ICellRendererParams } from "ag-grid-community";
+import React, { useMemo } from "react";
 
 // Custom cell renderer for the "error" column
-interface ErrorCellRendererProps {
-  data: Row;
-}
 
 export const ErrorCellRenderer = ({ data }: ICellRendererParams) => {
-  const error = data?.error;
+  const errors: string[] = useMemo(() => {
+    return data?.error?.split(";") ?? [];
+  }, [data]);
 
-  if (!error) {
+  if (!errors.length) {
     return (
       <div className="flex h-full w-full items-center justify-center gap-3">
         <CheckIcon className="text-green-500" />
@@ -32,7 +30,8 @@ export const ErrorCellRenderer = ({ data }: ICellRendererParams) => {
             className="bg-red-700 text-white hover:bg-red-500"
           >
             <Eye />
-            View Errors
+            View Errors:
+            <span>{errors.length}</span>
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-80">
@@ -40,16 +39,14 @@ export const ErrorCellRenderer = ({ data }: ICellRendererParams) => {
             <div className="space-y-2">
               <h4 className="leading-none font-medium">Errors</h4>
               <div className="text-muted-foreground text-sm">
-                {typeof error === "string" ? (
+                {errors.length ? (
                   <ul className="flex flex-col gap-2">
-                    {error.split(";").map((x, i) => (
-                      <li key={i}>
-                        {i + 1}. {x}
-                      </li>
+                    {errors.map((x, i) => (
+                      <li key={i}>{x}</li>
                     ))}
                   </ul>
                 ) : (
-                  JSON.stringify(error)
+                  JSON.stringify(errors)
                 )}
               </div>
             </div>

@@ -1,8 +1,8 @@
-import { ATTRIBUTE_TYPES } from "@/constants/attribute-types";
 import { darkTheme } from "@/constants/table-theme";
+import { DropdownCols, useDropdown } from "@/lib/hooks/use-dropdown";
 import { useCsvData } from "@/lib/providers/CsvDataContext";
 import { Data, Row } from "@/types";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { Board, User } from "@/types/entity-types";
 import {
   AllCommunityModule,
   CellValueChangedEvent,
@@ -13,8 +13,7 @@ import { AgGridReact } from "ag-grid-react";
 import { useMemo } from "react";
 import { CellRenderer } from "./cell-renderer";
 import { ErrorCellRenderer } from "./error-cell-renderer";
-import { Board, User } from "@/types/entity-types";
-import { DropdownCols, useDropdown } from "@/lib/hooks/use-dropdown";
+import { TooltipProvider } from "./tooltip";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -72,6 +71,7 @@ export const Grid = ({ data, users = [], boards = [] }: GridProps) => {
             cellEditor: "agSelectCellEditor",
             cellEditorParams: {
               values: getDropdownValues(col, DROPDOWN_COLS),
+              valueListMaxHeight: 200,
             } as ISelectCellEditorParams,
           }),
         };
@@ -110,13 +110,14 @@ export const Grid = ({ data, users = [], boards = [] }: GridProps) => {
           rowData={data.data}
           theme={darkTheme}
           onCellValueChanged={onCellValueChanged}
+          suppressScrollOnNewData
         />
       </TooltipProvider>
     </div>
   );
 };
 
-function generateHeaderName(col: string, csvData: Data[]) {
+const generateHeaderName = (col: string, csvData: Data[]) => {
   if (col.includes("attribute") && col !== "attribute_type") {
     const attributeTable = csvData.find(
       (table) => table.tableName === "Attribute",
@@ -132,7 +133,7 @@ function generateHeaderName(col: string, csvData: Data[]) {
     .split("_")
     .map((str) => str.charAt(0).toUpperCase() + str.slice(1))
     .join(" ");
-}
+};
 
 const getDropdownValues = (
   col: string,

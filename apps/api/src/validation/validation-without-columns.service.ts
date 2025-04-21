@@ -522,17 +522,20 @@ export class ValidationService {
             }
           });
 
-          editorEntries.forEach(({ name, column }) => {
-            if (assigneeMap.has(name)) {
-              const columns = [
-                ...editorMap.get(name)!,
-                ...assigneeMap.get(name)!,
-              ];
-              errors.push(
-                `${columns.join(',')}: Person '${name}' is listed as both editor and assignee`,
-              );
-            }
-          });
+          /*********
+           * Uncomment if editors can't be assignees.
+           *********/
+          // editorEntries.forEach(({ name, column }) => {
+          //   if (assigneeMap.has(name)) {
+          //     const columns = [
+          //       ...editorMap.get(name)!,
+          //       ...assigneeMap.get(name)!,
+          //     ];
+          //     errors.push(
+          //       `${columns.join(',')}: Person '${name}' is listed as both editor and assignee`,
+          //     );
+          //   }
+          // });
         }
 
         if (table.tableName === 'Stage') {
