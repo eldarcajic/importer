@@ -20,6 +20,10 @@ export const Review = () => {
     router.push("/csv-import");
   };
 
+  const handleProceed = () => {
+    router.push("/csv-import/preview");
+  };
+
   useEffect(() => {
     const timer = setInterval(
       () => setProgress((prev) => (prev + 30 <= 95 ? prev + 30 : 95)),
@@ -34,12 +38,16 @@ export const Review = () => {
     return () => clearInterval(timer);
   }, [csvData]);
 
-  const { data: boards, isLoading: isBoardsLoading } = useQuery({
+  const hasErrors = csvData.some((table) =>
+    table.data.some((row) => row.error),
+  );
+
+  const { data: boards } = useQuery({
     queryKey: ["boards"],
     queryFn: getBoards,
   });
 
-  const { data: users, isLoading: isUsersLoading } = useQuery({
+  const { data: users } = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
   });
@@ -77,9 +85,9 @@ export const Review = () => {
     <div className="box-border flex h-screen w-full flex-col items-center justify-start gap-8 px-20 py-12">
       <h1 className="text-primary text-4xl">Data review</h1>
       <p className="text-muted-foreground text-lg">
-        Please review the data you've uploaded to make sure it's correct or to
-        resolve potential errors.{" "}
-        <span className="font-semibold">Double click </span>
+        Please review the data you've uploaded to make sure it's correct or
+        toapps/web/app/csv-import/review/page-client-component.tsx resolve
+        potential errors. <span className="font-semibold">Double click </span>
         on cell to edit.
       </p>
       <Tabs defaultValue={csvData[0]?.tableName} className="h-full w-full">
@@ -104,7 +112,8 @@ export const Review = () => {
 
         {csvData.map((table) => (
           <TabsContent
-            className="flex w-full grow"
+            className="flex w-full grow data-[state=inactive]:hidden"
+            forceMount
             key={table.tableName}
             value={table.tableName}
           >
@@ -113,10 +122,17 @@ export const Review = () => {
         ))}
       </Tabs>
 
-      <Button className="self-end">
-        <span>Proceed</span>
-        <ChevronRight />
-      </Button>
+      <div className="flex w-full justify-between">
+        <Button onClick={goBack}>
+          <ChevronLeft />
+          Go Back
+        </Button>
+
+        <Button disabled={isDataLoading || hasErrors} onClick={handleProceed}>
+          <span>Proceed</span>
+          <ChevronRight />
+        </Button>
+      </div>
     </div>
   );
 };
