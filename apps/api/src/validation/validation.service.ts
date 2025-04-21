@@ -178,10 +178,10 @@ export class ValidationService {
              * Missing title or type indicates an incomplete attribute, which is invalid.
              *********/
             if (!attr.title) {
-              errors.push('Missing title');
+              errors.push('title: Missing title');
             }
             if (!attr.attribute_type) {
-              errors.push('Missing attribute_type');
+              errors.push('attribute_type: Missing attribute_type');
             }
 
             /*********
@@ -193,7 +193,7 @@ export class ValidationService {
               !this.config.validAttributeTypes.includes(attr.attribute_type)
             ) {
               errors.push(
-                `Invalid attribute_type '${attr.attribute_type}', must be one of ${this.config.validAttributeTypes.join(', ')}`,
+                `attribute_type: Invalid attribute_type '${attr.attribute_type}', must be one of ${this.config.validAttributeTypes.join(', ')}`,
               );
             }
 
@@ -202,7 +202,7 @@ export class ValidationService {
              * Duplicate titles could lead to confusion in attribute identification.
              *********/
             if (attr.title && titleCounts.get(attr.title)! > 1) {
-              errors.push('Duplicate title');
+              errors.push('title: Duplicate title');
             }
 
             /*********
@@ -210,7 +210,7 @@ export class ValidationService {
              * Duplicate identifiers could cause incorrect attribute mappings.
              *********/
             if (attr.identifier && identifierCounts.get(attr.identifier)! > 1) {
-              errors.push('Duplicate identifier');
+              errors.push('identifier: Duplicate identifier');
             }
 
             /*********
@@ -297,10 +297,11 @@ export class ValidationService {
                     `${key}: Used but not defined in Attribute table`,
                   );
                 } else {
-                  if (!attr.title || !attr.attribute_type) {
-                    errors.push(
-                      `${key}: Invalid attribute. Check Attributes table.`,
-                    );
+                  if (!attr.title) {
+                    errors.push(`${key}: Has no title`);
+                  }
+                  if (!attr.attribute_type) {
+                    errors.push(`${key}: Has no type`);
                   }
                   if (attr.title && attr.attribute_type) {
                     this.validateAttributeValue(

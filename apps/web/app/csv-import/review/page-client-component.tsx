@@ -85,9 +85,9 @@ export const Review = () => {
     <div className="box-border flex h-screen w-full flex-col items-center justify-start gap-8 px-20 py-12">
       <h1 className="text-primary text-4xl">Data review</h1>
       <p className="text-muted-foreground text-lg">
-        Please review the data you've uploaded to make sure it's correct or
-        toapps/web/app/csv-import/review/page-client-component.tsx resolve
-        potential errors. <span className="font-semibold">Double click </span>
+        Please review the data you've uploaded to make sure it's correct or to
+        resolve potential errors.{" "}
+        <span className="font-semibold">Double click </span>
         on cell to edit.
       </p>
       <Tabs defaultValue={csvData[0]?.tableName} className="h-full w-full">

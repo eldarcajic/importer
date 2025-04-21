@@ -14,7 +14,7 @@ export const useDropdown = (
         .find((table) => table.tableName === "Contact")
         ?.data.map((row) => (row.name as string) ?? "") ?? []
     );
-  }, []);
+  }, [csvData]);
 
   const organizations = useMemo(() => {
     return (
@@ -22,7 +22,7 @@ export const useDropdown = (
         .find((table) => table.tableName === "Organization")
         ?.data.map((row) => (row.name as string) ?? "") ?? []
     );
-  }, []);
+  }, [csvData]);
 
   const stages = useMemo(() => {
     return (
@@ -30,7 +30,7 @@ export const useDropdown = (
         .find((table) => table.tableName === "Stage")
         ?.data.map((row) => (row.name as string) ?? "") ?? []
     );
-  }, []);
+  }, [csvData]);
 
   const DROPDOWN_COLS = [
     {

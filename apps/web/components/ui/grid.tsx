@@ -76,7 +76,7 @@ export const Grid = ({ data, users = [], boards = [] }: GridProps) => {
           }),
         };
       });
-    }, [columns, hasErrors]);
+    }, [columns, hasErrors, DROPDOWN_COLS, csvData]);
 
     return colDefs;
   };
@@ -118,6 +118,10 @@ export const Grid = ({ data, users = [], boards = [] }: GridProps) => {
 };
 
 const generateHeaderName = (col: string, csvData: Data[]) => {
+  if (col === "error") {
+    return "Status";
+  }
+
   if (col.includes("attribute") && col !== "attribute_type") {
     const attributeTable = csvData.find(
       (table) => table.tableName === "Attribute",
