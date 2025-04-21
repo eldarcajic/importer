@@ -5,7 +5,7 @@ export class StageDto {
   board_name: string;
 
   @IsString()
-  stage_name: string;
+  name: string;
 
   @IsString()
   order_index: string;

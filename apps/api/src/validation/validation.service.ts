@@ -7,13 +7,18 @@ import {
   OrganizationDto,
   StageDto,
 } from './dto';
+import { UsersService } from 'src/users/users.service';
+import { BoardsService } from 'src/boards/board.service';
 
 @Injectable()
 export class ValidationService {
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly boardsService: BoardsService,
+  ) {}
   private readonly config = {
     validAttributeTypes: ['text', 'number', 'date', 'money', 'textarea'],
-    teamUsers: ['Alice Brown', 'Bob Wilson', 'Charlie Davis'],
-    kanbanBoards: ['Sales Pipeline', 'Project Management', 'Customer Success'],
+    //kanbanBoards: ['Sales Pipeline', 'Project Management', 'Customer Success'],
     regexPatterns: {
       email: /^[^@]+@[^@]+\.[^@]+$/,
       phone: /^\d[\d-]{5,}$/,
@@ -27,6 +32,10 @@ export class ValidationService {
   };
 
   validateJsonData(jsonData: JsonDataDto): any {
+    const teamUsers = this.usersService.getAllUsers().map((user) => user.name);
+    const kanbanBoards = this.boardsService
+      .getAllBoards()
+      .map((board) => board.name);
     /*********
      * Initialize storage for tables and attribute usage tracking.
      * tablesByName maps table names to their data for easy access.
@@ -362,7 +371,7 @@ export class ValidationService {
               (key.startsWith('assignee_') || key.startsWith('editor_')) &&
               deal[key]
             ) {
-              if (!this.config.teamUsers.includes(deal[key])) {
+              if (!teamUsers.includes(deal[key])) {
                 errors.push(`${key} (${deal[key]}) not in team user list.`);
               }
             }
@@ -455,22 +464,22 @@ export class ValidationService {
            * Only add valid board names to the stages map to ensure Deals reference valid boards.
            * Log the board_name for debugging to trace validation errors.
            *********/
-          if (stage.board_name && stage.stage_name) {
+          if (stage.board_name && stage.name) {
             console.log(
-              `Validating Stage board_name: ${stage.board_name}, stage_name: ${stage.stage_name}`,
+              `Validating Stage board_name: ${stage.board_name}, stage_name: ${stage.name}`,
             );
-            if (!this.config.kanbanBoards.includes(stage.board_name)) {
+            if (!kanbanBoards.includes(stage.board_name)) {
               errors.push(
-                `Invalid board_name '${stage.board_name}', must be one of ${this.config.kanbanBoards.join(', ')}`,
+                `Invalid board_name '${stage.board_name}', must be one of ${kanbanBoards.join(', ')}`,
               );
             } else {
               if (!stages.has(stage.board_name)) {
                 stages.set(stage.board_name, new Set());
               }
-              if (stages.get(stage.board_name)!.has(stage.stage_name)) {
+              if (stages.get(stage.board_name)!.has(stage.name)) {
                 errors.push('Duplicate stage name for board');
               } else {
-                stages.get(stage.board_name)!.add(stage.stage_name);
+                stages.get(stage.board_name)!.add(stage.name);
               }
             }
           }
@@ -510,7 +519,7 @@ export class ValidationService {
         (table.data as DealDto[]).forEach((record) => {
           const errors = record.error ? record.error.split('; ') : [];
           if (record.board_name && record.stage_name) {
-            if (!this.config.kanbanBoards.includes(record.board_name)) {
+            if (!kanbanBoards.includes(record.board_name)) {
               errors.push(
                 `board_name '${record.board_name}' is not a valid board`,
               );
