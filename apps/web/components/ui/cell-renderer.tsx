@@ -8,22 +8,26 @@ import { ICellRendererParams } from "ag-grid-community";
 
 export const CellRenderer = ({ data, value, column }: ICellRendererParams) => {
   const colDef = column?.getColDef();
+  const field = colDef?.field;
+  const headerName = colDef?.headerName;
+
   const cellError = data?.error
-    ? data?.error
-        .split(";")
-        .map((x: string) =>
-          (colDef?.field && x.includes(colDef?.field)) ||
-          (colDef?.headerName && x.includes(colDef?.headerName)) ||
-          (value && x.includes(value))
-            ? x
-            : undefined,
-        )
-        .filter((x: string | undefined) => x !== undefined)
+    ? data.error.split(";").filter((error: string) => {
+        const [fieldsPart] = error.split(":", 1);
+        if (!fieldsPart) return false;
+        const errorFields = fieldsPart.split(",").map((f) => f.trim());
+        return (
+          errorFields.includes(field ?? "") ||
+          errorFields.includes(headerName ?? "")
+        );
+      })
     : [];
 
   return (
     <div
-      className={`flex h-full w-full items-center rounded-md px-4 ${cellError.length && "border border-red-700"}`}
+      className={`flex h-full w-full items-center rounded-md px-4 ${
+        cellError.length ? "border border-red-700" : ""
+      }`}
     >
       {cellError.length ? (
         <Tooltip>
@@ -32,9 +36,9 @@ export const CellRenderer = ({ data, value, column }: ICellRendererParams) => {
           </TooltipTrigger>
           <TooltipContent className="bg-popover text-muted-foreground-muted border-muted-foreground border">
             <ul>
-              {cellError.map((x: string, i: number) => (
+              {cellError.map((error: string, i: number) => (
                 <li key={i}>
-                  {i + 1}. {x}
+                  {i + 1}. {error}
                 </li>
               ))}
             </ul>
