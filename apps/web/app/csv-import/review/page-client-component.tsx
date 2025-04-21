@@ -108,7 +108,7 @@ export const Review = () => {
             key={table.tableName}
             value={table.tableName}
           >
-            <Grid data={table} />
+            <Grid data={table} users={users} boards={boards} />
           </TabsContent>
         ))}
       </Tabs>

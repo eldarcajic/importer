@@ -202,3 +202,7 @@ a {
 .ag-cell {
   padding: 0 !important;
 }
+
+.ag-picker-field-display {
+  padding: 7px !important;
+}

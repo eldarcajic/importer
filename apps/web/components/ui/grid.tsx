@@ -13,26 +13,20 @@ import { AgGridReact } from "ag-grid-react";
 import { useMemo } from "react";
 import { CellRenderer } from "./cell-renderer";
 import { ErrorCellRenderer } from "./error-cell-renderer";
+import { Board, User } from "@/types/entity-types";
+import { DropdownCols, useDropdown } from "@/lib/hooks/use-dropdown";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 type GridProps = {
   data: Data;
+  users?: User[];
+  boards?: Board[];
 };
 
-const DROPDOWN_COLS = [
-  "attribute_type",
-  "assignee_",
-  "contact_",
-  "deal_",
-  "editor_",
-  "organization_",
-  "board_name",
-  "stage_name",
-];
-
-export const Grid = ({ data }: GridProps) => {
+export const Grid = ({ data, users = [], boards = [] }: GridProps) => {
   const { csvData, onDataChange } = useCsvData();
+  const { DROPDOWN_COLS } = useDropdown(csvData, users, boards);
   const defaultColDef = {
     filter: true,
   };
@@ -58,10 +52,10 @@ export const Grid = ({ data }: GridProps) => {
         : [...columns, "error"];
 
       return uniqueColumns.map((col) => {
-        const isDropdownMaterial = DROPDOWN_COLS.some((dropdownCol) =>
-          col.includes(dropdownCol),
-        );
-        const isAttributeTypeCol = col === "attribute_type";
+        const isDropdownMaterial =
+          DROPDOWN_COLS.map((col) => col.colName).some((dropdownCol) =>
+            col.includes(dropdownCol),
+          ) && !col.includes("_attribute_");
         const isErrorCol = col === "error";
         const isIdCol = col === "id";
 
@@ -77,7 +71,7 @@ export const Grid = ({ data }: GridProps) => {
           ...(isDropdownMaterial && {
             cellEditor: "agSelectCellEditor",
             cellEditorParams: {
-              values: ATTRIBUTE_TYPES,
+              values: getDropdownValues(col, DROPDOWN_COLS),
             } as ISelectCellEditorParams,
           }),
         };
@@ -139,3 +133,16 @@ function generateHeaderName(col: string, csvData: Data[]) {
     .map((str) => str.charAt(0).toUpperCase() + str.slice(1))
     .join(" ");
 }
+
+const getDropdownValues = (
+  col: string,
+  DROPDOWN_COLS: DropdownCols,
+): string[] => {
+  const dropdownCol = DROPDOWN_COLS.find((dropdownCol) =>
+    col.includes(dropdownCol.colName),
+  );
+
+  const values = dropdownCol?.values ?? [];
+
+  return values;
+};

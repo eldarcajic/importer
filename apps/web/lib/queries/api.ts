@@ -1,3 +1,5 @@
+import { Board, User } from "@/types/entity-types";
+
 export const getBoards = async () => {
   const response = await fetch("http://localhost:5000/boards");
 
@@ -5,7 +7,9 @@ export const getBoards = async () => {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
 
-  return response.json();
+  const boards: Board[] = await response.json();
+
+  return boards;
 };
 
 export const getUsers = async () => {
@@ -15,7 +19,9 @@ export const getUsers = async () => {
     throw new Error(`HTTP error! Status: ${response.status}`);
   }
 
-  return response.json();
+  const users: User[] = await response.json();
+
+  return users;
 };
 
 export const validateData = async (jsonData: any) => {
