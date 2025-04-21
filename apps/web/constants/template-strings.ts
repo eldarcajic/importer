@@ -54,5 +54,5 @@ export const dealsTemplateString = `address,nickname,board_name,stage_name,assig
 export const organizationsTemplateString = `name,organization_attribute_1,organization_attribute_2,organization_attribute_3,organization_attribute_4,organization_attribute_5,organization_attribute_6,organization_attribute_7,organization_attribute_8,organization_attribute_9,organization_attribute_10,organization_attribute_11,organization_attribute_12,organization_attribute_13,organization_attribute_14,organization_attribute_15
 ,,,,,,,,,,,,,,,`;
 
-export const stagesTemplateString = `board_name,stage_name,order_index
+export const stagesTemplateString = `board_name,name,order_index
 ,,`;

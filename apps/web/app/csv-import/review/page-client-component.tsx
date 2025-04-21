@@ -5,12 +5,9 @@ import { Grid } from "@/components/ui/grid";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useCsvData } from "@/lib/providers/CsvDataContext";
-import {
-  ChevronLeft,
-  ChevronRight,
-  FileWarning,
-  TriangleAlert,
-} from "lucide-react";
+import { getBoards, getUsers } from "@/lib/queries/api";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronLeft, ChevronRight, TriangleAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -36,6 +33,16 @@ export const Review = () => {
 
     return () => clearInterval(timer);
   }, [csvData]);
+
+  const { data: boards, isLoading: isBoardsLoading } = useQuery({
+    queryKey: ["boards"],
+    queryFn: getBoards,
+  });
+
+  const { data: users, isLoading: isUsersLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: getUsers,
+  });
 
   if (!csvData.length) {
     return (
