@@ -1,3 +1,23 @@
+export const getBoards = async () => {
+  const response = await fetch("http://localhost:5000/boards");
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+export const getUsers = async () => {
+  const response = await fetch("http://localhost:5000/users");
+
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+
+  return response.json();
+};
+
 export const validateData = async (jsonData: any) => {
   const response = await fetch("http://localhost:5000/validate", {
     method: "POST",

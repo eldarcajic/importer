@@ -1,17 +1,18 @@
+import { ATTRIBUTE_TYPES } from "@/constants/attribute-types";
 import { darkTheme } from "@/constants/table-theme";
+import { useCsvData } from "@/lib/providers/CsvDataContext";
+import { Data, Row } from "@/types";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 import {
   AllCommunityModule,
   CellValueChangedEvent,
+  ISelectCellEditorParams,
   ModuleRegistry,
-  GridOptions,
 } from "ag-grid-community";
 import { AgGridReact } from "ag-grid-react";
-import { useMemo, useRef, useCallback } from "react";
-import { ErrorCellRenderer } from "./error-cell-renderer";
-import { Data, Row } from "@/types";
-import { useCsvData } from "@/lib/providers/CsvDataContext";
+import { useMemo } from "react";
 import { CellRenderer } from "./cell-renderer";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { ErrorCellRenderer } from "./error-cell-renderer";
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -19,13 +20,22 @@ type GridProps = {
   data: Data;
 };
 
+const DROPDOWN_COLS = [
+  "attribute_type",
+  "assignee_",
+  "contact_",
+  "deal_",
+  "editor_",
+  "organization_",
+  "board_name",
+  "stage_name",
+];
+
 export const Grid = ({ data }: GridProps) => {
   const { csvData, onDataChange } = useCsvData();
   const defaultColDef = {
     filter: true,
   };
-
-  const gridRef = useRef<AgGridReact>(null);
 
   const columns = useMemo(() => {
     return data.data[0] ? Object.keys(data.data[0]) : [];
@@ -48,6 +58,10 @@ export const Grid = ({ data }: GridProps) => {
         : [...columns, "error"];
 
       return uniqueColumns.map((col) => {
+        const isDropdownMaterial = DROPDOWN_COLS.some((dropdownCol) =>
+          col.includes(dropdownCol),
+        );
+        const isAttributeTypeCol = col === "attribute_type";
         const isErrorCol = col === "error";
         const isIdCol = col === "id";
 
@@ -60,6 +74,12 @@ export const Grid = ({ data }: GridProps) => {
           pinned: isErrorCol,
           editable: isErrorCol ? false : true,
           cellRenderer: isErrorCol ? ErrorCellRenderer : CellRenderer,
+          ...(isDropdownMaterial && {
+            cellEditor: "agSelectCellEditor",
+            cellEditorParams: {
+              values: ATTRIBUTE_TYPES,
+            } as ISelectCellEditorParams,
+          }),
         };
       });
     }, [columns, hasErrors]);
@@ -93,7 +113,6 @@ export const Grid = ({ data }: GridProps) => {
         <AgGridReact
           columnDefs={GridColumnDefs({ columns, hasErrors })}
           defaultColDef={defaultColDef}
-          ref={gridRef}
           rowData={data.data}
           theme={darkTheme}
           onCellValueChanged={onCellValueChanged}
