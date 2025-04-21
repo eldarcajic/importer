@@ -87,53 +87,6 @@ export const Grid = ({ data }: GridProps) => {
     onDataChange(updatedTables);
   };
 
-  // Function to add a new row
-  const addNewRow = useCallback(() => {
-    const newRow: Row = {
-      id: crypto.randomUUID(), // Generate unique ID for the new row
-      // Initialize other fields with empty or default values
-      ...columns.reduce(
-        (acc, col) => {
-          if (col !== "id" && col !== "error") {
-            acc[col] = "";
-          }
-          return acc;
-        },
-        {} as Record<string, string>,
-      ),
-      error: "",
-    };
-
-    const updatedTables: Data[] = csvData.map((table) => {
-      if (table.tableName !== data.tableName) return table;
-
-      return {
-        ...table,
-        data: [...table.data, newRow],
-      };
-    });
-
-    onDataChange(updatedTables);
-  }, [csvData, columns, data.tableName, onDataChange]);
-
-  // Custom full-width cell renderer for the "Add Row" button
-  const fullWidthCellRenderer = useCallback(() => {
-    return (
-      <div className="p-2.5 text-center">
-        <button onClick={addNewRow}>Add New Row</button>
-      </div>
-    );
-  }, [addNewRow]);
-
-  // Grid options to include pinned bottom row
-  const gridOptions: GridOptions = {
-    pinnedBottomRowData: [{ fullWidth: true }], // Single full-width row
-    isFullWidthRow: (params) => {
-      return params.rowNode.data.fullWidth === true;
-    },
-    fullWidthCellRenderer,
-  };
-
   return (
     <div className="h-full w-full">
       <TooltipProvider>
@@ -144,7 +97,6 @@ export const Grid = ({ data }: GridProps) => {
           rowData={data.data}
           theme={darkTheme}
           onCellValueChanged={onCellValueChanged}
-          gridOptions={gridOptions}
         />
       </TooltipProvider>
     </div>

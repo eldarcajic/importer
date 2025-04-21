@@ -140,7 +140,7 @@ export class ValidationService {
               errors.push('Missing title');
             }
             if (!attr.attribute_type) {
-              errors.push('Missing type');
+              errors.push('Missing attribute_type');
             }
 
             /*********
@@ -152,7 +152,7 @@ export class ValidationService {
               !this.config.validAttributeTypes.includes(attr.attribute_type)
             ) {
               errors.push(
-                `Invalid type '${attr.attribute_type}', must be one of ${this.config.validAttributeTypes.join(', ')}`,
+                `Invalid attribute_type '${attr.attribute_type}', must be one of ${this.config.validAttributeTypes.join(', ')}`,
               );
             }
 
