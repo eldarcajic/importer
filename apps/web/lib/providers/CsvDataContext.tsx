@@ -23,8 +23,6 @@ export const CsvDataProvider = ({ children }: { children: ReactNode }) => {
       console.error("Validation error:", err);
     },
     onSuccess: (data) => {
-      console.log(data);
-      console.log(data.tables);
       setCSVData(data.tables);
     },
   });
