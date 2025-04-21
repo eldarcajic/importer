@@ -71,7 +71,9 @@ export const Review = () => {
       <h1 className="text-primary text-4xl">Data review</h1>
       <p className="text-muted-foreground text-lg">
         Please review the data you've uploaded to make sure it's correct or to
-        resolve potential errors.
+        resolve potential errors.{" "}
+        <span className="font-semibold">Double click </span>
+        on cell to edit.
       </p>
       <Tabs defaultValue={csvData[0]?.tableName} className="h-full w-full">
         <TabsList className="h-12 w-full rounded-xl px-3 py-1.5">

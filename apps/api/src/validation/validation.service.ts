@@ -363,9 +363,7 @@ export class ValidationService {
               deal[key]
             ) {
               if (!this.config.teamUsers.includes(deal[key])) {
-                errors.push(
-                  `${key} (${deal[key]}) not in team user list [${this.config.teamUsers.join(', ')}]`,
-                );
+                errors.push(`${key} (${deal[key]}) not in team user list.`);
               }
             }
           });
@@ -420,7 +418,7 @@ export class ValidationService {
            *********/
           if (deal.nickname) {
             if (deals.has(deal.nickname)) {
-              errors.push('Duplicate deal nickname');
+              errors.push(`Duplicate deal nickname - ${deal.nickname}`);
             } else {
               deals.add(deal.nickname);
             }

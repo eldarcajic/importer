@@ -198,3 +198,7 @@ a {
 .animate-progress {
   animation: progressFill 1s ease-out forwards;
 }
+
+.ag-cell {
+  padding: 0 !important;
+}

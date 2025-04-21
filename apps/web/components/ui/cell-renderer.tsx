@@ -21,10 +21,9 @@ export const CellRenderer = ({ data, value, column }: ICellRendererParams) => {
         .filter((x: string | undefined) => x !== undefined)
     : [];
 
-  console.log(cellError);
   return (
     <div
-      className={`flex h-full w-full items-center rounded-md px-2 ${cellError.length && "border border-red-700"}`}
+      className={`flex h-full w-full items-center rounded-md px-4 ${cellError.length && "border border-red-700"}`}
     >
       {cellError.length ? (
         <Tooltip>

@@ -26,7 +26,11 @@ export const ErrorCellRenderer = ({ data }: ICellRendererParams) => {
     <div className="flex h-full w-full items-center justify-center">
       <Popover>
         <PopoverTrigger asChild>
-          <Button variant="default" size="sm" className="bg-red-700 text-white">
+          <Button
+            variant="default"
+            size="sm"
+            className="bg-red-700 text-white hover:bg-red-500"
+          >
             <Eye />
             View Errors
           </Button>
